@@ -1,9 +1,10 @@
 package com.example.movie.ui;
 
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,12 +22,17 @@ import com.example.movie.Adapter.RecyclerViewAdapter;
 import java.util.List;
 
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends BaseActivity implements ViewInterface  {
     List<Movie> movieList;
     private CompositeDisposable mCompositeDisposable;
     MainPresenter mainPresenter=new MainPresenter();
+    @BindView(R.id.etSearch)EditText etSearch;
+    @BindView(R.id.recycler)RecyclerView recyclerView;
 
 
 
@@ -35,48 +41,38 @@ public class MainActivity extends BaseActivity implements ViewInterface  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button btnSearch = findViewById(R.id.btnSearch);
+        ButterKnife.bind(this);
+        List<Movie> dataList;
         mCompositeDisposable = new CompositeDisposable();
 
         mainPresenter.attachView(this);
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final EditText etSearch = findViewById(R.id.etSearch);
-                mainPresenter.searchMovies(etSearch.getText().toString());
-            }
-        });
+
     }
+    @OnClick(R.id.btnSearch)
+    public void onClick(View view){
+        mainPresenter.searchMovies(etSearch.getText().toString());
 
-
-//    @Override
-//    public void displayMovie(Search search) {
-//
-//    }
-
-    private void generateMovieList(List<Movie> dataList) {
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
-
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(), dataList);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-        recyclerView.setLayoutManager(layoutManager);
-        if(dataList==null){
-            Toast.makeText(this,"Movie does not exist",Toast.LENGTH_SHORT).show();
-        }else{
-            adapter.setMovie(dataList);
-            recyclerView.setAdapter(adapter);
-        }
     }
     @Override protected int setLayoutResourceId() {
         return R.layout.activity_main;
     }
 
+    private void generateMovieList(List<Movie> dataList) {
 
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(), dataList);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
+            adapter.setMovie(dataList);
+        Log.d("datalist",dataList.size()+"");
+            recyclerView.setAdapter(adapter);
+
+
+    }
     @Override
     public void displayMovie(Search search) {
         generateMovieList(search.getSearch());
     }
+
 }
 

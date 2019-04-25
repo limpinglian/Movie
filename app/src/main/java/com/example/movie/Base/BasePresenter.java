@@ -3,6 +3,8 @@ package com.example.movie.Base;
 import com.example.movie.MainMvpView.PresenterInterface;
 import com.example.movie.MainMvpView.ViewInterface;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -22,9 +24,16 @@ public void attachView(T vInterface) {
         return vInterface;
     }
     public static Retrofit getRetrofitInstance() {
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        client.addInterceptor(loggingInterceptor);
+
+
         if (retrofit == null) {
             retrofit = new retrofit2.Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .client(client.build())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(JacksonConverterFactory.create())
                     .build();

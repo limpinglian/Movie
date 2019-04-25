@@ -14,8 +14,6 @@ import io.reactivex.schedulers.Schedulers;
 public class MainPresenter extends BasePresenter<ViewInterface> {
 
 
-
-
     public void attachView(ViewInterface viewInterface) {
         super.attachView(viewInterface);
     }
@@ -30,8 +28,7 @@ public class MainPresenter extends BasePresenter<ViewInterface> {
                     public void onNext(Search search) {
                         if(search != null){
                             getMvpView().displayMovie(search);
-                            //generateMovieList(search.getSearch());
-                            //  Log.d("Search size" , search.getSearch().size()+"");
+                             Log.d("Search size" , search+"");
                         } else {
                             Log.d("error" , "is null");
                         }

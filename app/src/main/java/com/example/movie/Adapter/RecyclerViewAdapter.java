@@ -1,8 +1,10 @@
 package com.example.movie.Adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+
+
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +14,13 @@ import android.widget.TextView;
 import com.example.movie.Model.Movie;
 import com.example.movie.R;
 import com.squareup.picasso.Picasso;
+import android.support.annotation.NonNull;
 
 import java.util.List;
+
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
@@ -31,13 +38,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
-        holder.tvTitle.setText(dataList.get(i).getTitle());
-        holder.tvYear.setText(dataList.get(i).getYear());
-        holder.tvImdb.setText(dataList.get(i).getImdbID());
-        holder.tvType.setText(dataList.get(i).getType());
-        Picasso.get().load(dataList.get(i).getPoster()).into(holder.ivPoster);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        if(dataList.get(position)==null){
+            Log.d("Null Value","Failed");        }
+        else {
+            holder.tvTitle.setText(dataList.get(position).getTitle());
+            holder.tvYear.setText(dataList.get(position).getYear());
+            holder.tvImdb.setText(dataList.get(position).getImdbID());
+            holder.tvType.setText(dataList.get(position).getType());
+            Picasso.get().load(dataList.get(position).getPoster()).into(holder.ivPoster);
 
+        }
         /*if (dataList.get(i).getPoster() != null) {
             Glide.with(context)
                     .load(dataList.get(i).getPoster().replace("https", "http"))
@@ -60,21 +71,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-    private TextView tvTitle;
-    private TextView tvYear;
-    private TextView tvImdb;
-    private TextView tvType;
-    private ImageView ivPoster;
+        @BindView(R.id.tvTitle) TextView tvTitle;
+        @BindView(R.id.tvYear)TextView tvYear;
+        @BindView(R.id.tvImdbId)TextView tvImdb;
+        @BindView(R.id.tvType)TextView tvType;
+        @BindView(R.id.ivPoster)ImageView ivPoster;
+
 
         ViewHolder(View itemView) {
             super(itemView);
 
-            tvTitle=(TextView)itemView.findViewById(R.id.tvTitle);
-            tvYear=(TextView)itemView.findViewById(R.id.tvYear);
-            tvImdb=(TextView)itemView.findViewById(R.id.tvImdbId);
-            tvType=(TextView)itemView.findViewById(R.id.tvType);
-            ivPoster=(ImageView) itemView.findViewById(R.id.ivPoster);
+            ButterKnife.bind(this,itemView);
 
         }}
+
+
+
 
     }
